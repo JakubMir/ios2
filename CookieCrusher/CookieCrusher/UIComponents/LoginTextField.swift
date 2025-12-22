@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CookieTextField: View {
+struct LoginTextField: View {
     var title: String
     @Binding var text: String
     var isSecure: Bool = false
@@ -24,13 +24,13 @@ struct CookieTextField: View {
                 SecureField(title, text: $text)
                     .padding()
                     .background(Color.white)
-                    .cornerRadius(15)
+                    .cornerRadius(20)
                     .foregroundColor(.black)
             } else {
                 TextField(title, text: $text)
                     .padding()
                     .background(Color.white)
-                    .cornerRadius(15)
+                    .cornerRadius(20)
                     .foregroundColor(.black)
             }
         }

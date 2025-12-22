@@ -21,10 +21,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct CookieCrusherApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @StateObject var authService = AuthenticationService.shared
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authService.user != nil {
+                ContentView()
+                    .transition(.opacity)
+            } else {
+                LoginView()
+                    .transition(.opacity)
+            }
         }
     }
 }

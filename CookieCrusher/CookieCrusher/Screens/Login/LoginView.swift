@@ -8,8 +8,57 @@
 import SwiftUI
 
 struct LoginView: View {
+    @StateObject private var viewModel = LoginViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            ZStack {
+                LoginBackground()
+                
+                VStack {
+                    Spacer()
+                    
+                    Text("CookieCrusher")
+                        .font(.custom("Alkatra-Bold", size: 50))
+                        .foregroundColor(.black)
+                        .padding(.bottom, 40)
+                    
+                    // Form card
+                    VStack(spacing: 10) {
+                        
+                        LoginTextField(title: "Email", text: $viewModel.email)
+                        
+                        LoginTextField(title: "Password", text: $viewModel.password, isSecure: true)
+                        
+                        
+                        LoginButton(title: "Login") {
+                            viewModel.login()
+                        }.padding(.top, 10)
+                            .padding(.bottom, 10)
+                        
+                        NavigationLink(destination: RegisterView()) {
+                            Text("REGISTRATION")
+                                .font(.headline)
+                                .bold()
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                                .background(Color("Secondary"))
+                                .cornerRadius(25)
+                        }
+                    }
+                    .padding(15)
+                    .frame(maxWidth: 380)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(30)
+                    .padding(.horizontal, 20)
+                    .shadow(radius: 5)
+                    
+                    Spacer()
+                }
+            }
+        }
+        .accentColor(Color("Primary"))
     }
 }
 
