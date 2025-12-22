@@ -19,7 +19,7 @@ class LoginViewModel: ObservableObject {
     @Published var shouldDismiss = false
     
     var isValid: Bool {
-        return !email.isEmpty && password.count >= 6
+        return !email.isEmpty && password.count >= 1
     }
     
     func login() {
@@ -33,7 +33,7 @@ class LoginViewModel: ObservableObject {
                 if success {
                     self?.shouldDismiss = true
                 } else {
-                    self?.errorMessage = AuthenticationService.shared.errorMessage
+                    self?.errorMessage = "Špatný email nebo heslo"
                     self?.showError = true
                 }
             }

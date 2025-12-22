@@ -14,7 +14,6 @@ struct RegisterView: View {
     var body: some View {
         ZStack {
             LoginBackground()
-            
             VStack {
                 Spacer()
                 
@@ -25,6 +24,10 @@ struct RegisterView: View {
                 
                 // Form card
                 VStack(spacing: 10) {
+                    if viewModel.showError {
+                        Text(viewModel.errorMessage)
+                            .foregroundColor(.red)
+                    }
                     HStack {
                         Button(action: { dismiss() }) {
                             HStack(spacing: 5) {
@@ -44,10 +47,9 @@ struct RegisterView: View {
                     
                     LoginTextField(title: "Email", text: $viewModel.email)
                     
-                    LoginTextField(title: "Password", text: $viewModel.password, isSecure: true)
+                    LoginTextField(title: "Password (6+ characters)", text: $viewModel.password, isSecure: true)
                     
-                    
-                    LoginButton(title: "Register", isPrimary: false) {
+                    LoginButton(title: "Register", isPrimary: false, isValid:viewModel.isValid) {
                         viewModel.register()
                     }.padding(.top, 10)
                         

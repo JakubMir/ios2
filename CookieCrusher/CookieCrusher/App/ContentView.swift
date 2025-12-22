@@ -14,6 +14,9 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, world!")
+            Button("Log out"){
+                AuthenticationService.shared.signOut()
+            }
         }
         .padding()
     }

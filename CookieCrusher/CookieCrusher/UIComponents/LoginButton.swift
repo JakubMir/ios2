@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginButton: View {
     var title: String
     var isPrimary: Bool = true
+    var isValid: Bool = true
     var action: () -> Void
     
     var body: some View {
@@ -21,7 +22,9 @@ struct LoginButton: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
                 .background(isPrimary ? Color("Primary") : Color("Secondary"))
+                .opacity(isValid ? 1 : 0.5)
                 .cornerRadius(25)
         }
+        .disabled(!isValid)
     }
 }

@@ -25,16 +25,19 @@ struct LoginView: View {
                     
                     // Form card
                     VStack(spacing: 10) {
-                        
+                        if viewModel.showError {
+                            Text(viewModel.errorMessage)
+                                .foregroundColor(.red)
+                        }
                         LoginTextField(title: "Email", text: $viewModel.email)
                         
                         LoginTextField(title: "Password", text: $viewModel.password, isSecure: true)
                         
-                        
-                        LoginButton(title: "Login") {
+                        LoginButton(title: "Login", isValid:viewModel.isValid) {
                             viewModel.login()
                         }.padding(.top, 10)
                             .padding(.bottom, 10)
+                            
                         
                         NavigationLink(destination: RegisterView()) {
                             Text("REGISTRATION")
