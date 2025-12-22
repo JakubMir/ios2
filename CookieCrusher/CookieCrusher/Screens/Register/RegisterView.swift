@@ -14,53 +14,61 @@ struct RegisterView: View {
     var body: some View {
         ZStack {
             LoginBackground()
-            VStack {
-                Spacer()
-                
-                Text("CookieCrusher")
-                    .font(.custom("Alkatra-Bold", size: 50))
-                    .foregroundColor(.black)
-                    .padding(.bottom, 20)
-                
-                // Form card
-                VStack(spacing: 10) {
-                    if viewModel.showError {
-                        Text(viewModel.errorMessage)
-                            .foregroundColor(.red)
-                    }
-                    HStack {
-                        Button(action: { dismiss() }) {
-                            HStack(spacing: 5) {
-                                Image(systemName: "chevron.left")
-                                    .bold()
-                                Text("LOGIN")
-                                    .bold()
-                            }
-                            .foregroundColor(Color("Primary"))
-                        }
-                        Spacer()
-                    }
-                    .padding(.bottom, 10)
-                    
-                    // Form
-                    LoginTextField(title: "Nickname", text: $viewModel.nickname)
-                    
-                    LoginTextField(title: "Email", text: $viewModel.email)
-                    
-                    LoginTextField(title: "Password (6+ characters)", text: $viewModel.password, isSecure: true)
-                    
-                    LoginButton(title: "Register", isPrimary: false, isValid:viewModel.isValid) {
-                        viewModel.register()
-                    }.padding(.top, 10)
-                        
+            if(viewModel.isLoading){
+                VStack {
+                    ProgressView()
+                        .scaleEffect(1.5)
                 }
-                .padding(15)
-                .frame(maxWidth: 380)
-                .background(.ultraThinMaterial)
-                .cornerRadius(30)
-                .padding(.horizontal, 20)
-                
-                Spacer()
+            }
+            else{
+                VStack {
+                    Spacer()
+                    
+                    Text("CookieCrusher")
+                        .font(.custom("Alkatra-Bold", size: 50))
+                        .foregroundColor(.black)
+                        .padding(.bottom, 20)
+                    
+                    // Form card
+                    VStack(spacing: 10) {
+                        if viewModel.showError {
+                            Text(viewModel.errorMessage)
+                                .foregroundColor(.red)
+                        }
+                        HStack {
+                            Button(action: { dismiss() }) {
+                                HStack(spacing: 5) {
+                                    Image(systemName: "chevron.left")
+                                        .bold()
+                                    Text("LOGIN")
+                                        .bold()
+                                }
+                                .foregroundColor(Color("Primary"))
+                            }
+                            Spacer()
+                        }
+                        .padding(.bottom, 10)
+                        
+                        // Form
+                        LoginTextField(title: "Nickname", text: $viewModel.nickname)
+                        
+                        LoginTextField(title: "Email", text: $viewModel.email)
+                        
+                        LoginTextField(title: "Password (6+ characters)", text: $viewModel.password, isSecure: true)
+                        
+                        LoginButton(title: "Register", isPrimary: false, isValid:viewModel.isValid) {
+                            viewModel.register()
+                        }.padding(.top, 10)
+                            
+                    }
+                    .padding(15)
+                    .frame(maxWidth: 380)
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(30)
+                    .padding(.horizontal, 20)
+                    
+                    Spacer()
+                }
             }
         }
         .navigationBarBackButtonHidden(true)

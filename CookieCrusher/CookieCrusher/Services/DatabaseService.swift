@@ -38,4 +38,23 @@ class DatabaseService {
             }
         }
     }
+    
+    func checkOrCreateGuest(uid: String, completion: @escaping (Bool) -> Void) {
+            let userDoc = db.collection("users").document(uid)
+            
+            userDoc.getDocument { snapshot, error in
+                if let snapshot = snapshot, snapshot.exists {
+                    print("Uživatel nalezen v DB.")
+                    completion(true)
+                } else {
+                    print("Vytvářím nového hosta...")
+                    
+                    let newGuest = DBUser(id: uid, email: "", nickname: "Guest #\(uid)")
+                    
+                    self.saveUser(user: newGuest) { success in
+                        completion(success)
+                    }
+                }
+            }
+        }
 }
