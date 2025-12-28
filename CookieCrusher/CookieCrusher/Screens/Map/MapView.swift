@@ -36,7 +36,7 @@ struct MapView: View {
                 
                 TopBarView(lives: 5, currency: 250)
             }
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 

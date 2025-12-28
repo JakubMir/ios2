@@ -26,19 +26,11 @@ struct SettingsMenuView: View {
                     HStack {
                         Spacer()
                         
-                        Button(action: {
-                                                    navigateToMap = true
-                                                }) {
-                                ZStack {
-                                    Circle()
-                                        .fill(Color(red: 0.85, green: 0.8, blue: 0.85))
-                                        .frame(width: 50, height: 50)
-                                    
-                                    Image("Buttons-house")
-                                        .font(.system(size: 24))
-                                        .foregroundColor(Color(red: 0.5, green: 0.4, blue: 0.55))
-                                }
-                            }
+                        Button{
+                            navigateToMap.toggle()
+                        } label: {
+                                                    Image("Buttons-house").resizable().scaledToFit().frame(width: 66, height: 70)
+                                                }
                             .padding(.trailing, 120)
                             .padding(.top, 10)}
                     
@@ -77,6 +69,7 @@ struct SettingsMenuView: View {
                     Spacer()
                 }
             }
+            .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $navigateToMap) {
                             MapView()
                         }

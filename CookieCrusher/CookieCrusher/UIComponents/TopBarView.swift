@@ -37,11 +37,11 @@ struct TopBarView: View {
             
             Spacer()
             
-            Button{
-                
-            }label: {
+            NavigationLink(destination: SettingsMenuView()) {
                 Image("Buttons-setting").resizable().scaledToFit().frame(width: 50, height: 70)
             }
+            
+            
         }
         .padding(.horizontal)
         .background(Color("Primary"))

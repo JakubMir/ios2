@@ -28,7 +28,7 @@ struct CookieCrusherApp: App {
     var body: some Scene {
         WindowGroup {
             if authService.user != nil {
-                ContentView()
+                MapView()
                     .transition(.opacity)
             }
             else if isFirstLaunch {
