@@ -2,7 +2,7 @@
 //  TopBarView.swift
 //  CookieCrusher
 //
-//  Created by Jakub Mir on 22.12.2025.
+//  Created by Jakub Mir on 28.12.2025.
 //
 
 import SwiftUI
@@ -13,38 +13,41 @@ struct TopBarView: View {
     
     var body: some View {
         HStack {
-            // Životy
-            HStack(spacing: 5) {
+            Button{
+                
+            }label: {
+                Image("Buttons-shoping-trophy").resizable().scaledToFit().frame(width: 50, height: 70)
+            }
+            
+            Spacer()
+            
+            // Lives
+            ZStack{
                 Image(systemName: "heart.fill")
-                    .foregroundColor(.red)
-                    .font(.title2)
+                    .foregroundColor(.pink)
+                    .font(.largeTitle)
                 Text("\(lives)")
                     .font(.title3)
                     .bold()
                     .foregroundColor(.white)
-            }
-            .padding(.horizontal, 15)
-            .padding(.vertical, 8)
-            .background(Color.black.opacity(0.5))
-            .cornerRadius(20)
+            }.padding(.horizontal, 15)
+                .padding(.vertical, 8)
+                .background(Color.black.opacity(0.5))
+                .cornerRadius(20)
             
             Spacer()
             
-            HStack(spacing: 5) {
-                Image(systemName: "star.fill")
-                    .foregroundColor(.yellow)
-                    .font(.title2)
-                Text("\(currency)")
-                    .font(.title3)
-                    .bold()
-                    .foregroundColor(.white)
+            Button{
+                
+            }label: {
+                Image("Buttons-setting").resizable().scaledToFit().frame(width: 50, height: 70)
             }
-            .padding(.horizontal, 15)
-            .padding(.vertical, 8)
-            .background(Color.black.opacity(0.5))
-            .cornerRadius(20)
         }
         .padding(.horizontal)
-        .padding(.top, 10)
+        .background(Color("Primary"))
     }
+}
+
+#Preview{
+    TopBarView()
 }

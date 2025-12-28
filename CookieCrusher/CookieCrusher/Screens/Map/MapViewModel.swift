@@ -2,7 +2,7 @@
 //  MapViewModel.swift
 //  CookieCrusher
 //
-//  Created by Jakub Mir on 22.12.2025.
+//  Created by Jakub Mir on 28.12.2025.
 //
 
 import SwiftUI
