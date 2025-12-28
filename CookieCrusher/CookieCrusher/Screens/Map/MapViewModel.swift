@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import FirebaseAuth
 
 struct World: Identifiable {
     let id: Int
@@ -21,8 +22,23 @@ class MapViewModel: ObservableObject {
         World(id: 1, backgroundName: "level_1", levelRange: 1...10)
     ]
     
-    // Tady budeme později číst z DBUser
-    @Published var userMaxLevel: Int = 5
+    @Published var userMaxLevel: Int = 1
+    @Published var userLives: Int = 5
+    
+    func fetchData() {
+        print("currentUser \(Auth.auth().currentUser?.uid)")
+            guard let uid = Auth.auth().currentUser?.uid else { return }
+            
+            DatabaseService.shared.fetchUser(uid: uid) { [weak self] user in
+                guard let user = user else { return }
+                print("Level: \(user.currentLevel)")
+                print("Lives: \(user.lives)")
+                DispatchQueue.main.async {
+                    self?.userMaxLevel = user.currentLevel
+                    self?.userLives = user.lives
+                }
+            }
+        }
     
     func getXOffset(for level: Int) -> CGFloat {
         return CGFloat(sin(Double(level) * 0.8) * 80)

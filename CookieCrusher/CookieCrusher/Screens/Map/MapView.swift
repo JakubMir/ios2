@@ -26,6 +26,7 @@ struct MapView: View {
                     }
                     .ignoresSafeArea()
                     .onAppear {
+                        viewModel.fetchData()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             withAnimation {
                                 proxy.scrollTo(viewModel.userMaxLevel, anchor: .center)
@@ -34,7 +35,7 @@ struct MapView: View {
                     }
                 }
                 
-                TopBarView(lives: 5, currency: 250)
+                TopBarView(lives: viewModel.userLives, currency: 250)
             }
         }.navigationBarBackButtonHidden(true)
     }
@@ -58,7 +59,7 @@ struct WorldView: View {
                     LevelNodeView(
                         levelNumber: levelNumber,
                         isLocked: levelNumber > viewModel.userMaxLevel,
-                        stars: levelNumber < viewModel.userMaxLevel ? Int.random(in: 1...3) : 0, // Mock hvězdy
+                        stars: levelNumber < viewModel.userMaxLevel ? Int.random(in: 1...3) : 0,
                         action: {
                             print("Kliknuto na level \(levelNumber)")
                         }
