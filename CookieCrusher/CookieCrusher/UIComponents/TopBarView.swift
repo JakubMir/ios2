@@ -13,10 +13,8 @@ struct TopBarView: View {
     
     var body: some View {
         HStack {
-            Button{
-                
-            }label: {
-                Image("Buttons-shoping-trophy").resizable().scaledToFit().frame(width: 50, height: 70)
+            NavigationLink(destination: LeaderboardView()) {
+                Image("Buttons-trophy").resizable().scaledToFit().frame(width: 50, height: 70)
             }
             
             Spacer()

@@ -60,8 +60,8 @@ class DatabaseService {
     
     func fetchLeaderboard(completion: @escaping ([DBUser]) -> Void) {
         db.collection("users")
-            .order(by: "highestScore", descending: true) // 1. Seřadit podle skóre
-            .limit(to: 50) // 2. Stáhnout jich víc (např. 50), abychom měli rezervu po odfiltrování hostů
+            .order(by: "highestScore", descending: true)
+            .limit(to: 50)
             .getDocuments { snapshot, error in
                 if let error = error {
                     print("Chyba leaderboardu: \(error.localizedDescription)")
@@ -87,7 +87,7 @@ class DatabaseService {
                 }
                 
                 // 4. FILTRACE: Chceme jen ty, co mají e-mail (nejsou to hosté)
-                let registeredUsers = allUsers.filter { !$0.email.isEmpty }
+                let registeredUsers = allUsers.filter { !$0.email.isEmpty && $0.highestScore > 0 }
                 
                 // 5. Vrátíme jen TOP 10 z těch vyfiltrovaných
                 let top10 = Array(registeredUsers.prefix(10))
