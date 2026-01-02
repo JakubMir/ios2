@@ -16,6 +16,7 @@ struct DBUser: Codable, Identifiable {
     var highestScore: Int
     var lives: Int
     var dateCreated: Date
+    var stars: [String: Int] = [:]
     
     init(id: String, email: String, nickname: String) {
         self.id = id

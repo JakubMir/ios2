@@ -24,6 +24,7 @@ class MapViewModel: ObservableObject {
     
     @Published var userMaxLevel: Int = 1
     @Published var userLives: Int = 5
+    @Published var userStars: [String: Int] = [:]
     
     func fetchData() {
         print("currentUser \(Auth.auth().currentUser?.uid)")
@@ -36,11 +37,31 @@ class MapViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self?.userMaxLevel = user.currentLevel
                     self?.userLives = user.lives
+                    self?.userStars = user.stars
                 }
             }
         }
     
+    func getStars(for level: Int) -> Int {
+            return userStars["\(level)"] ?? 0
+        }
+    
     func getXOffset(for level: Int) -> CGFloat {
         return CGFloat(sin(Double(level) * 0.8) * 80)
+    }
+    
+    func getArea() -> Int{
+        var res = 1
+        if userMaxLevel <= 10 {
+            res = 1
+        }
+        else if userMaxLevel <= 20 {
+            res = 2
+        }
+        else {
+            res = 3
+        }
+            
+        return res
     }
 }

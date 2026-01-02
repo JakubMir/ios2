@@ -6,10 +6,10 @@
 //
 
 struct Swap: CustomStringConvertible {
-    let cookieA: GameCookie
-    let cookieB: GameCookie
-    
-    var description: String {
-        return "swap \(cookieA) with \(cookieB)"
-    }
+  let cookieA: GameCookie
+  let cookieB: GameCookie
+
+  var description: String {
+    return "swap \(cookieA) with \(cookieB)"
+  }
 }
