@@ -10,6 +10,8 @@ import SwiftUI
 struct MapView: View {
     @StateObject private var viewModel = MapViewModel()
     
+    @State private var selectedLevelToPlay: LevelData?
+    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
@@ -19,7 +21,13 @@ struct MapView: View {
                         VStack(spacing: 0) {
                             
                             ForEach(viewModel.worlds) { world in
-                                WorldView(world: world, viewModel: viewModel)
+                                WorldView(
+                                    world: world,
+                                    viewModel: viewModel,
+                                    onLevelSelect: { levelId in
+                                        startGame(id: levelId)
+                                    }
+                                )
                             }
                         }
                         .padding(.bottom, 0)
@@ -37,13 +45,27 @@ struct MapView: View {
                 
                 TopBarView(lives: viewModel.userLives, currency: 250)
             }
-        }.navigationBarBackButtonHidden(true)
+        }
+        .navigationBarBackButtonHidden(true)
+        .fullScreenCover(item: $selectedLevelToPlay) { levelData in
+            GameView(level: levelData)
+        }
+    }
+    
+    private func startGame(id: Int) {
+        let levelData = LevelsService.shared.getLevel(id: id)
+        
+        print("Spouštím Level \(id): Layout \(levelData.layout != nil ? "Ano" : "Ne"), BG: \(levelData.backgroundName)")
+        
+        selectedLevelToPlay = levelData
     }
 }
 
 struct WorldView: View {
     let world: World
     @ObservedObject var viewModel: MapViewModel
+    
+    var onLevelSelect: (Int) -> Void
     
     var body: some View {
         ZStack {
@@ -61,7 +83,7 @@ struct WorldView: View {
                         isLocked: levelNumber > viewModel.userMaxLevel,
                         stars: levelNumber < viewModel.userMaxLevel ? Int.random(in: 1...3) : 0,
                         action: {
-                            print("Kliknuto na level \(levelNumber)")
+                            onLevelSelect(levelNumber)
                         }
                     )
                     .offset(x: viewModel.getXOffset(for: levelNumber))
