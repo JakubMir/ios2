@@ -64,7 +64,7 @@ class GameViewModel: ObservableObject, GameSceneDelegate {
           self.moves -= 1
 
           if self.moves <= 0 {
-            self.checkForGameOver()
+            //self.checkForGameOver()
           }
         }
       }
@@ -161,7 +161,6 @@ class GameViewModel: ObservableObject, GameSceneDelegate {
       playedLevel: currentLevel.id,
       starsEarned: earnedStars,
       scoreToAdd: score,
-      lives: 5
     )
   }
 

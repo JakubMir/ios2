@@ -38,7 +38,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3E3121732F0982EC00FE456A /* Exceptions for "CookieCrusher" folder in "CookieCrusher" target */ = {
+		3EF70B7F2EF9BB0A00D91793 /* Exceptions for "CookieCrusher" folder in "CookieCrusher" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -51,7 +51,7 @@
 		3EF70A4B2EF9A02C00D91793 /* CookieCrusher */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3E3121732F0982EC00FE456A /* Exceptions for "CookieCrusher" folder in "CookieCrusher" target */,
+				3EF70B7F2EF9BB0A00D91793 /* Exceptions for "CookieCrusher" folder in "CookieCrusher" target */,
 			);
 			path = CookieCrusher;
 			sourceTree = "<group>";

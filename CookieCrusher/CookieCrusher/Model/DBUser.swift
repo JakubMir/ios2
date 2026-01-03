@@ -15,6 +15,7 @@ struct DBUser: Codable, Identifiable {
     var currentLevel: Int
     var highestScore: Int
     var lives: Int
+    var lastLifeLost: Date?
     var dateCreated: Date
     var stars: [String: Int] = [:]
     

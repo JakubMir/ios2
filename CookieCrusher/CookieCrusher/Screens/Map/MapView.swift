@@ -11,6 +11,10 @@ struct MapView: View {
   @StateObject private var viewModel = MapViewModel()
 
   @State private var selectedLevelToPlay: LevelData?
+    
+    init() {
+          UIScrollView.appearance().bounces = false
+       }
 
   var body: some View {
     NavigationStack {
@@ -30,7 +34,7 @@ struct MapView: View {
                 )
               }
             }
-            .padding(.bottom, 100)
+            .padding(.top, 100)
           }
           .ignoresSafeArea()
 
@@ -48,7 +52,10 @@ struct MapView: View {
           }
         }
 
-        TopBarView(lives: viewModel.userLives, currency: 250)
+          TopBarView(lives: viewModel.userLives, currency: viewModel.getAllStars(), lastLifeLost: viewModel.userLastLifeLost, onTimerExpired: {
+            print("Časovač na nule -> Obnovuji data...")
+            viewModel.fetchData()
+        }) // TODO: vm stars
       }
     }
     .navigationBarBackButtonHidden(true)
