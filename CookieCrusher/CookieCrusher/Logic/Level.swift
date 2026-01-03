@@ -188,7 +188,69 @@ class Level {
       }
     }
   }
-  func topUpCookies() -> [[GameCookie]] {
+
+
+        func topUpCookies() -> [[GameCookie]] {
+            var columns: [[GameCookie]] = []
+            var cookieType: Int = 0
+            
+            for column in 0..<NumColumns {
+                var array: [GameCookie] = []
+                
+                // 1. ZÍSKÁNÍ PLATNÝCH SUŠENEK
+                // Projdeme sloupec a posbíráme všechny sušenky, které tam už jsou.
+                // Ignorujeme díry, prostě si je dáme do "zásobníku".
+                var existingCookies: [GameCookie] = []
+                for row in 0..<NumRows {
+                    if let cookie = cookies[column, row] {
+                        existingCookies.append(cookie)
+                        cookies[column, row] = nil // Dočasně vyprázdníme slot
+                    }
+                }
+                
+                // 2. PŘESKLÁDÁNÍ DO PLATNÝCH POZIC (GRAVITACE)
+                // Teď jdeme odspodu (row 0) nahoru a plníme jen PLATNÁ políčka (tiles == true).
+                // Nejdřív dáváme existující sušenky (to je ten pád dolů),
+                // a když dojdu, generujeme nové.
+                
+                var currentCookieIndex = 0 // Ukazatel na existující sušenky
+                
+                for row in 0..<NumRows {
+                    // Pokud je toto místo v layoutu vypnuté (0), přeskočíme ho.
+                    // Sušenka tam nemůže být.
+                    if tiles[column, row] == false { continue }
+                    
+                    // Máme ještě staré sušenky k umístění?
+                    if currentCookieIndex < existingCookies.count {
+                        let cookie = existingCookies[currentCookieIndex]
+                        currentCookieIndex += 1
+                        
+                        // Pokud je sušenka na jiném řádku, než byla, znamená to pohyb
+                        if cookie.row != row {
+                            cookie.row = row
+                            cookies[column, row] = cookie
+                            array.append(cookie) // Přidáme do seznamu pro animaci posunu
+                        } else {
+                            // Sušenka se nehla, jen ji vrátíme do pole
+                            cookies[column, row] = cookie
+                        }
+                    } else {
+                        // Došly staré sušenky -> GENERUJEME NOVOU
+                        cookieType = Int.random(in: 1...6)
+                        let newCookie = GameCookie(column: column, row: row, cookieType: cookieType)
+                        cookies[column, row] = newCookie
+                        array.append(newCookie) // Přidáme do seznamu pro animaci nové
+                    }
+                }
+                
+                if !array.isEmpty {
+                    columns.append(array)
+                }
+            }
+            return columns
+        }
+    
+  func topUpCookies1() -> [[GameCookie]] {
     var columns: [[GameCookie]] = []
     var cookieType: Int = 0
 

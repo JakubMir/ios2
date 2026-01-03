@@ -161,7 +161,6 @@ class GameViewModel: ObservableObject, GameSceneDelegate {
       playedLevel: currentLevel.id,
       starsEarned: earnedStars,
       scoreToAdd: score,
-      lives: 5
     )
   }
 

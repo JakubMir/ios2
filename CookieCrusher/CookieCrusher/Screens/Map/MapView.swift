@@ -48,7 +48,10 @@ struct MapView: View {
           }
         }
 
-        TopBarView(lives: viewModel.userLives, currency: 250)
+        TopBarView(lives: viewModel.userLives, currency: 250, lastLifeLost: viewModel.userLastLifeLost, onTimerExpired: {
+            print("Časovač na nule -> Obnovuji data...")
+            viewModel.fetchData()
+        }) // TODO: vm stars
       }
     }
     .navigationBarBackButtonHidden(true)
