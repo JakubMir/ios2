@@ -138,7 +138,8 @@ struct GameOverModal: View {
               viewModel.scene.stateMachine.enter(WaitForInputState.self)
             }) {
               VStack {
-                  Image("Buttons-arrow").resizable().frame(width: 70, height: 70)
+                Image(systemName: "arrow.counterclockwise.circle.fill")
+                  .resizable().frame(width: 70, height: 70).foregroundColor(.orange)
                 Text("Retry").font(.custom("Alkatra-Bold", size: 16)).foregroundColor(.white)
               }
             }

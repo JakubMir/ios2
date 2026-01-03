@@ -53,7 +53,7 @@ class MenuViewModel: ObservableObject {
     // Navigace na účet (placeholder pro budoucí implementaci)
     func navigateToAccount() {
         // Zde bude logika pro navigaci na detail účtu
-        print("Navigace na účet: \(currentUser?.email ?? "N/A")")
+        NavigationLink("Account", destination: AccountView())
     }
     
     func navigateToMap() {

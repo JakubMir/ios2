@@ -49,7 +49,6 @@ struct LeaderboardView: View {
                         Text("No players yet!")
                             .foregroundColor(.black.opacity(0.6))
                     } else {
-                        // Seznam
                         ScrollView {
                             VStack(spacing: 12) {
                                 ForEach(Array(viewModel.topPlayers.enumerated()), id: \.element.id) { index, player in

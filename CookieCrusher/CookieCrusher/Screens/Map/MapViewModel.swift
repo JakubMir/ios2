@@ -25,7 +25,6 @@ class MapViewModel: ObservableObject {
     @Published var userMaxLevel: Int = 1
     @Published var userLives: Int = 5
     @Published var userStars: [String: Int] = [:]
-    @Published var userLastLifeLost: Date? = nil
     
     func fetchData() {
         print("currentUser \(Auth.auth().currentUser?.uid)")
@@ -38,16 +37,10 @@ class MapViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self?.userMaxLevel = user.currentLevel
                     self?.userLives = user.lives
-                    self?.userLastLifeLost = user.lastLifeLost
                     self?.userStars = user.stars
                 }
             }
         }
-    
-    
-    func getAllStars() -> Int {
-        return userStars.values.reduce(0, +)
-    }
     
     func getStars(for level: Int) -> Int {
             return userStars["\(level)"] ?? 0

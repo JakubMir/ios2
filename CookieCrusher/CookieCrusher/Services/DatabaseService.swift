@@ -13,9 +13,6 @@ class DatabaseService {
 
   private let db = Firestore.firestore()
 
-  let maxLives = 5
-  let timeToRegenLife: TimeInterval = 300  // TODO: set 300 ms
-
   private init() {}
 
   func saveUser(user: DBUser, completion: @escaping (Bool) -> Void) {
@@ -97,41 +94,10 @@ class DatabaseService {
   }
 
   func fetchUser(uid: String, completion: @escaping (DBUser?) -> Void) {
-    let userRef = db.collection("users").document(uid)
-    userRef.getDocument { snapshot, error in
+    db.collection("users").document(uid).getDocument { snapshot, error in
       guard let data = snapshot?.data(), error == nil else {
         completion(nil)
         return
-      }
-
-      var lives = data["lives"] as? Int ?? 5
-      let lastLifeLostTimestamp = data["lastLifeLost"] as? Timestamp
-      let lastLifeLostDate = lastLifeLostTimestamp?.dateValue()
-
-      var updatedLives = lives
-      var newLastLifeLost: Date? = lastLifeLostDate
-
-      if lives < self.maxLives, let lastDate = lastLifeLostDate {
-        let timePassed = Date().timeIntervalSince(lastDate)
-
-        if timePassed >= self.timeToRegenLife {
-          let livesToRegen = Int(timePassed / self.timeToRegenLife)
-          updatedLives = min(self.maxLives, lives + livesToRegen)
-
-          if updatedLives == self.maxLives {
-            newLastLifeLost = nil
-          } else {
-            let timeConsumed = TimeInterval(livesToRegen) * self.timeToRegenLife
-            newLastLifeLost = lastDate.addingTimeInterval(timeConsumed)
-          }
-
-          if updatedLives != lives {
-            userRef.updateData([
-              "lives": updatedLives,
-              "lastLifeLost": newLastLifeLost as Any,
-            ])
-          }
-        }
       }
 
       var user = DBUser(
@@ -141,11 +107,8 @@ class DatabaseService {
       )
       user.highestScore = data["highestScore"] as? Int ?? 0
       user.currentLevel = data["currentLevel"] as? Int ?? 1
+      user.lives = data["lives"] as? Int ?? 5
       user.stars = data["stars"] as? [String: Int] ?? [:]
-      user.lives = updatedLives
-      user.lastLifeLost = newLastLifeLost
-
-      print("Life lost: \(String(describing: user.lastLifeLost))")
 
       completion(user)
     }
@@ -153,7 +116,7 @@ class DatabaseService {
 
   func updateGameProgress(
     userId: String, unlockedLevel: Int, playedLevel: Int, starsEarned: Int, scoreToAdd: Int,
-    lives: Int? = nil
+    lives: Int
   ) {
     let userRef = db.collection("users").document(userId)
 
@@ -169,24 +132,19 @@ class DatabaseService {
       let oldLevel = sfDocument.data()?["currentLevel"] as? Int ?? 1
       let oldStarsMap = sfDocument.data()?["stars"] as? [String: Int] ?? [:]
 
+      let finalLevel = max(oldLevel, unlockedLevel)
+
       let levelKey = "\(playedLevel)"
       let oldStars = oldStarsMap[levelKey] ?? 0
-      let finalScoreToAdd: Int64 = (oldStars > 0) ? 0 : Int64(scoreToAdd)
-
-      let finalLevel = max(oldLevel, unlockedLevel)
       let finalStars = max(oldStars, starsEarned)
 
-      var updateData: [String: Any] = [
-        "currentLevel": finalLevel,
-        "highestScore": FieldValue.increment(finalScoreToAdd),
-        "stars.\(levelKey)": finalStars,
-      ]
-
-      if let lives = lives {
-        updateData["lives"] = lives
-      }
-
-      transaction.updateData(updateData, forDocument: userRef)
+      transaction.updateData(
+        [
+          "currentLevel": finalLevel,
+          "highestScore": FieldValue.increment(Int64(scoreToAdd)),
+          "lives": lives,
+          "stars.\(levelKey)": finalStars,
+        ], forDocument: userRef)
 
       return nil
 
@@ -194,7 +152,7 @@ class DatabaseService {
       if let error = error {
         print("Chyba DB: \(error)")
       } else {
-        print("DB OK: Progress uložen.")
+        print("DB OK: Level \(playedLevel) má nyní \(starsEarned) hvězd.")
       }
     }
   }
@@ -212,17 +170,10 @@ class DatabaseService {
       }
 
       let currentLives = sfDocument.data()?["lives"] as? Int ?? 5
-      let currentLastLifeLost = sfDocument.data()?["lastLifeLost"] as? Timestamp
 
-      let newLives = currentLives - 1
+      let newLives = max(0, currentLives - 1)
 
-      var updateData: [String: Any] = ["lives": newLives]
-
-      if currentLives == self.maxLives {
-        updateData["lastLifeLost"] = FieldValue.serverTimestamp()
-      }
-
-      transaction.updateData(updateData, forDocument: userRef)
+      transaction.updateData(["lives": newLives], forDocument: userRef)
 
       return newLives
 
