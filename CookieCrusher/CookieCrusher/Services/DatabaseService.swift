@@ -14,7 +14,7 @@ class DatabaseService {
   private let db = Firestore.firestore()
 
   let maxLives = 5
-  let timeToRegenLife: TimeInterval = 300 // TODO: set 300 ms
+  let timeToRegenLife: TimeInterval = 300  // TODO: set 300 ms
 
   private init() {}
 
@@ -144,58 +144,60 @@ class DatabaseService {
       user.stars = data["stars"] as? [String: Int] ?? [:]
       user.lives = updatedLives
       user.lastLifeLost = newLastLifeLost
-        
-        print("Life lost: \(String(describing: user.lastLifeLost))")
+
+      print("Life lost: \(String(describing: user.lastLifeLost))")
 
       completion(user)
     }
   }
 
+  func updateGameProgress(
+    userId: String, unlockedLevel: Int, playedLevel: Int, starsEarned: Int, scoreToAdd: Int,
+    lives: Int? = nil
+  ) {
+    let userRef = db.collection("users").document(userId)
 
-        func updateGameProgress(userId: String, unlockedLevel: Int, playedLevel: Int, starsEarned: Int, scoreToAdd: Int, lives: Int? = nil) {
-            let userRef = db.collection("users").document(userId)
-            
-            db.runTransaction({ (transaction, errorPointer) -> Any? in
-                let sfDocument: DocumentSnapshot
-                do {
-                    try sfDocument = transaction.getDocument(userRef)
-                } catch let fetchError as NSError {
-                    errorPointer?.pointee = fetchError
-                    return nil
-                }
-                
-                let oldLevel = sfDocument.data()?["currentLevel"] as? Int ?? 1
-                let oldStarsMap = sfDocument.data()?["stars"] as? [String: Int] ?? [:]
-                
-                let levelKey = "\(playedLevel)"
-                let oldStars = oldStarsMap[levelKey] ?? 0
-                let finalScoreToAdd: Int64 = (oldStars > 0) ? 0 : Int64(scoreToAdd)
-                
-                let finalLevel = max(oldLevel, unlockedLevel)
-                let finalStars = max(oldStars, starsEarned)
-                
-                var updateData: [String: Any] = [
-                    "currentLevel": finalLevel,
-                    "highestScore": FieldValue.increment(finalScoreToAdd),
-                    "stars.\(levelKey)": finalStars
-                ]
-                
-                if let lives = lives {
-                    updateData["lives"] = lives
-                }
-                
-                transaction.updateData(updateData, forDocument: userRef)
-                
-                return nil
-                
-            }) { (object, error) in
-                if let error = error {
-                    print("Chyba DB: \(error)")
-                } else {
-                    print("DB OK: Progress uložen.")
-                }
-            }
-        }
+    db.runTransaction({ (transaction, errorPointer) -> Any? in
+      let sfDocument: DocumentSnapshot
+      do {
+        try sfDocument = transaction.getDocument(userRef)
+      } catch let fetchError as NSError {
+        errorPointer?.pointee = fetchError
+        return nil
+      }
+
+      let oldLevel = sfDocument.data()?["currentLevel"] as? Int ?? 1
+      let oldStarsMap = sfDocument.data()?["stars"] as? [String: Int] ?? [:]
+
+      let levelKey = "\(playedLevel)"
+      let oldStars = oldStarsMap[levelKey] ?? 0
+      let finalScoreToAdd: Int64 = (oldStars > 0) ? 0 : Int64(scoreToAdd)
+
+      let finalLevel = max(oldLevel, unlockedLevel)
+      let finalStars = max(oldStars, starsEarned)
+
+      var updateData: [String: Any] = [
+        "currentLevel": finalLevel,
+        "highestScore": FieldValue.increment(finalScoreToAdd),
+        "stars.\(levelKey)": finalStars,
+      ]
+
+      if let lives = lives {
+        updateData["lives"] = lives
+      }
+
+      transaction.updateData(updateData, forDocument: userRef)
+
+      return nil
+
+    }) { (object, error) in
+      if let error = error {
+        print("Chyba DB: \(error)")
+      } else {
+        print("DB OK: Progress uložen.")
+      }
+    }
+  }
 
   func decreaseLives(userId: String, completion: @escaping (Int) -> Void) {
     let userRef = db.collection("users").document(userId)

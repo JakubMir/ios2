@@ -44,6 +44,11 @@ class MapViewModel: ObservableObject {
             }
         }
     
+    
+    func getAllStars() -> Int {
+        return userStars.values.reduce(0, +)
+    }
+    
     func getStars(for level: Int) -> Int {
             return userStars["\(level)"] ?? 0
         }

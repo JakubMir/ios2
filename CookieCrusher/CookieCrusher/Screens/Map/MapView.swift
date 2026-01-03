@@ -52,7 +52,7 @@ struct MapView: View {
           }
         }
 
-        TopBarView(lives: viewModel.userLives, currency: 250, lastLifeLost: viewModel.userLastLifeLost, onTimerExpired: {
+          TopBarView(lives: viewModel.userLives, currency: viewModel.getAllStars(), lastLifeLost: viewModel.userLastLifeLost, onTimerExpired: {
             print("Časovač na nule -> Obnovuji data...")
             viewModel.fetchData()
         }) // TODO: vm stars

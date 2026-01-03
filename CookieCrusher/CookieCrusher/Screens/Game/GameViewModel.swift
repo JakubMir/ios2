@@ -64,7 +64,7 @@ class GameViewModel: ObservableObject, GameSceneDelegate {
           self.moves -= 1
 
           if self.moves <= 0 {
-            self.checkForGameOver()
+            //self.checkForGameOver()
           }
         }
       }

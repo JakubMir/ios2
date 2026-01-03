@@ -12,8 +12,8 @@ struct TopBarView: View {
   var lives: Int = 5
   var currency: Int = 150
   var lastLifeLost: Date?
-    
-    var onTimerExpired: (() -> Void)?
+
+  var onTimerExpired: (() -> Void)?
 
   @State private var timeString: String = ""
 
@@ -56,7 +56,25 @@ struct TopBarView: View {
         .background(Color.black.opacity(0.5))
         .cornerRadius(20)
 
-      Spacer()
+      //Spacer()
+        
+        HStack(spacing: 4) {
+            Image(systemName: "star.fill")
+                .foregroundColor(.yellow)
+              .font(.largeTitle)
+
+            Text("\(currency)")
+              .font(.title3)
+              .bold()
+              .foregroundColor(.white)
+              .shadow(radius: 1)
+
+        }.padding(.horizontal, 12)
+          .padding(.vertical, 5)
+          .background(Color.black.opacity(0.5))
+          .cornerRadius(20)
+        
+        Spacer()
 
       NavigationLink(destination: SettingsMenuView()) {
         Image("Buttons-setting").resizable().scaledToFit().frame(width: 50, height: 70)
@@ -66,37 +84,32 @@ struct TopBarView: View {
     .padding(.horizontal)
     .background(Color("Primary"))
     .onReceive(timer) { _ in
-                updateTimer()
-            }
-            .onAppear {
-                updateTimer()
-            }
+      updateTimer()
+    }
+    .onAppear {
+      updateTimer()
+    }
   }
-    
-    private func updateTimer() {
-            guard lives < 5, let start = lastLifeLost else {
-                timeString = ""
-                return
-            }
-            
-            // Kdy se má přičíst další život? (Čas ztráty + 5 minut)
-            let targetDate = start.addingTimeInterval(regenInterval)
-            
-            // Kolik zbývá do cíle?
-            let diff = targetDate.timeIntervalSince(Date())
-            
-            if diff > 0 {
-                // Formátování MM:SS
-                let minutes = Int(diff) / 60
-                let seconds = Int(diff) % 60
-                timeString = String(format: "%02d:%02d", minutes, seconds)
-            } else {
-                // Čas vypršel, ale data z DB se ještě neobnovila
-                // Můžeme ukázat 00:00 nebo "Ready"
-                timeString = "00:00"
-                onTimerExpired?()
-            }
-        }
+
+  private func updateTimer() {
+    guard lives < 5, let start = lastLifeLost else {
+      timeString = ""
+      return
+    }
+
+    let targetDate = start.addingTimeInterval(regenInterval)
+
+    let diff = targetDate.timeIntervalSince(Date())
+
+    if diff > 0 {
+      let minutes = Int(diff) / 60
+      let seconds = Int(diff) % 60
+      timeString = String(format: "%02d:%02d", minutes, seconds)
+    } else {
+      timeString = "00:00"
+      onTimerExpired?()
+    }
+  }
 }
 
 #Preview {
